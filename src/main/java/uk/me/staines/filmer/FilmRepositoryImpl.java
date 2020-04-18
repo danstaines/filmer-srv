@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public class FilmRepositoryImpl implements FilmRepository {
 
         @PersistenceContext
-        private EntityManager entityManager;
+        private final EntityManager entityManager;
         private final ApplicationConfiguration applicationConfiguration;
 
         public FilmRepositoryImpl(@CurrentSession EntityManager entityManager,
@@ -34,8 +33,8 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         @Override
         @Transactional
-        public Film save(@NotBlank String name, String imdbId) {
-            Film film = new Film(name, imdbId);
+        public Film save(@NotNull FilmDetails details) {
+            Film film = new Film(details);
             entityManager.persist(film);
             return film;
         }
@@ -43,7 +42,7 @@ public class FilmRepositoryImpl implements FilmRepository {
         @Override
         @Transactional
         public void deleteById(@NotNull Long id) {
-            findById(id).ifPresent(filmDetails -> entityManager.remove(filmDetails));
+            findById(id).ifPresent(entityManager::remove);
         }
 
         private final static List<String> VALID_PROPERTY_NAMES = Arrays.asList("id", "name");
@@ -62,10 +61,17 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         @Override
         @Transactional
-        public int update(@NotNull Long id, @NotBlank String name, @NotBlank String imdbId) {
-            return entityManager.createQuery("UPDATE Film f SET name = :name, imdb_id = :imdbId where id = :id")
-                    .setParameter("name", name)
-                    .setParameter("imdb_id", imdbId)
+        public int update(@NotNull Long id, @NotNull FilmDetails details) {
+            return entityManager.createQuery("UPDATE Film f SET " +
+                    "title = :title, " +
+                    "imdb_id = :imdbId " +
+                    "runtime = :runtime " +
+                    "year = :year " +
+                    "where id = :id")
+                    .setParameter("title", details.getTitle())
+                    .setParameter("imdb_id", details.getImdbId())
+                    .setParameter("runtime", details.getRunTime())
+                    .setParameter("year", details.getYear())
                     .setParameter("id", id)
                     .executeUpdate();
         }

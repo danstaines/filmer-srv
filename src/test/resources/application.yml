@@ -6,8 +6,8 @@ micronaut:
   server:
     port: 8086
 omdb:
-  apiKey: dff9dc43
-  urlString: "http://www.omdbapi.com"
+  apiKey: xyz
+  urlString: "http://localhost:8888"
 datasources:
   default:
     url: ${JDBC_URL:`jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`}

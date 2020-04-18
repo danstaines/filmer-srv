@@ -8,18 +8,32 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.me.staines.filmer.omdb.OmdbClient;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Controller("/films")
 public class FilmController {
 
+    private final Logger log = LoggerFactory.getLogger(FilmController.class);
     protected final FilmRepository filmRepository;
+    private final OmdbClient client;
 
-    public FilmController(FilmRepository filmRepository) {
+    public FilmController(FilmRepository filmRepository, OmdbClient client) {
         this.filmRepository = filmRepository;
+        this.client = client;
+    }
+
+    @Get("/ping")
+    public Map<String,String> ping() {
+        return Map.of("status","ok","timestamp", Instant.now().toString());
     }
 
     @Get("/{id}")
@@ -29,9 +43,9 @@ public class FilmController {
                 .orElse(null);
     }
 
-    @Put("/")
-    public HttpResponse update(@Body @Valid FilmUpdateCommand command) {
-        int numberOfEntitiesUpdated = filmRepository.update(command.getId(), command.getName(), command.getImdbId());
+    @Put()
+    public HttpResponse<?> update(@Body @Valid FilmUpdateCommand command) {
+        int numberOfEntitiesUpdated = filmRepository.update(command.getId(), command.getFilmDetails());
 
         return HttpResponse
                 .noContent()
@@ -43,17 +57,25 @@ public class FilmController {
         return filmRepository.findAll(args);
     }
 
-    @Post("/")
-    public HttpResponse<Film> save(@Body @Valid FilmSaveCommand cmd) {
-        Film film = filmRepository.save(cmd.getName(), cmd.getImdbId());
+    @Post("/add")
+    public HttpResponse<Film> save(@Body @NotBlank String id) {
+        log.info("Saving film with IMDB ID {}", id);
+        FilmDetails details = client.find(id).blockingGet();
+        return this.save(details);
+    }
 
+    @Put()
+    public HttpResponse<Film> save(@Body @Valid FilmDetails details) {
+        log.info("Saving film {}", details);
+        Film film = filmRepository.save(details);
+        log.info("Saved film with ID {}", film.getId());
         return HttpResponse
                 .created(film)
-                .headers(headers -> headers.location(location(film.getId())));
+                .headers(headers -> headers.location(location(film)));
     }
 
     @Delete("/{id}")
-    public HttpResponse delete(Long id) {
+    public HttpResponse<?> delete(Long id) {
         filmRepository.deleteById(id);
         return HttpResponse.noContent();
     }

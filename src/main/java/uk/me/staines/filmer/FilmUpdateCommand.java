@@ -2,7 +2,6 @@ package uk.me.staines.filmer;
 
 import io.micronaut.core.annotation.Introspected;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Introspected
@@ -10,17 +9,16 @@ public class FilmUpdateCommand {
     @NotNull
     private Long id;
 
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String imdbId;
+    @NotNull
+    private FilmDetails filmDetails;
+
 
     public FilmUpdateCommand() {
     }
 
-    public FilmUpdateCommand(Long id, String name, String imdbId) {
+    public FilmUpdateCommand(Long id, FilmDetails details) {
         this.id = id;
-        this.name = name;
+        this.filmDetails = details;
     }
 
     public Long getId() {
@@ -31,19 +29,11 @@ public class FilmUpdateCommand {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public FilmDetails getFilmDetails() {
+        return filmDetails;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImdbId() {
-        return imdbId;
-    }
-
-    public void setImdbId(String imdbId) {
-        this.imdbId = imdbId;
+    public void setFilmDetails(FilmDetails filmDetails) {
+        this.filmDetails = filmDetails;
     }
 }

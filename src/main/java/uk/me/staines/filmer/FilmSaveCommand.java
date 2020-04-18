@@ -32,7 +32,7 @@ public class FilmSaveCommand {
         return imdbId;
     }
 
-    public void setImdbdId(String name) {
+    public void setImdbdId(String imdbId) {
         this.imdbId = imdbId;
     }
 }

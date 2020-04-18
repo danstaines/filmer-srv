@@ -41,6 +41,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testCompile "com.github.tomakehurst:wiremock-jre8:2.26.3"
 }
 
 test.classpath += configurations.developmentOnly
