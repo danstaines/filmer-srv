@@ -5,6 +5,8 @@ micronaut:
     name: filmer-srv
   server:
     port: 8086
+    cors:
+      enabled: true
 omdb:
   apiKey: dff9dc43
   urlString: "http://www.omdbapi.com"

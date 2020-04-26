@@ -13,6 +13,6 @@ public interface FilmRepository {
 
     List<FilmDetails> findAll(@NotNull SortingAndOrderArguments args);
 
-    int update(@NotNull Long id, @NotNull FilmDetails details);
+    int update(@NotNull Film details);
 
 }

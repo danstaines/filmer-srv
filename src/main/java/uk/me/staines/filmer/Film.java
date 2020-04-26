@@ -8,9 +8,17 @@ import java.util.Objects;
 @Table(name = "film")
 public class Film extends FilmDetails {
 
+    enum Location {
+        DVD,NETFLIX,NAS;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private Boolean watched = false;
+
+    private Location location = Location.DVD;
 
     public Film() {
         super();
@@ -33,6 +41,8 @@ public class Film extends FilmDetails {
     public String toString() {
         return "Film{" +
                 "id=" + id +
+                ", watched=" + watched +
+                ", location=" + location +
                 ", title='" + title + '\'' +
                 ", imdbId='" + imdbId + '\'' +
                 ", year='" + year + '\'' +
@@ -52,5 +62,21 @@ public class Film extends FilmDetails {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), id);
+    }
+
+    public Boolean getWatched() {
+        return watched;
+    }
+
+    public void setWatched(Boolean watched) {
+        this.watched = watched;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

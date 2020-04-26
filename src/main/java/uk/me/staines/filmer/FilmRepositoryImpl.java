@@ -61,18 +61,22 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         @Override
         @Transactional
-        public int update(@NotNull Long id, @NotNull FilmDetails details) {
+        public int update(@NotNull Film film) {
             return entityManager.createQuery("UPDATE Film f SET " +
                     "title = :title, " +
-                    "imdb_id = :imdbId " +
-                    "runtime = :runtime " +
-                    "year = :year " +
+                    "imdb_id = :imdb_id, " +
+                    "runtime = :runtime, " +
+                    "year = :year, " +
+                    "location = :location, " +
+                    "watched = :watched " +
                     "where id = :id")
-                    .setParameter("title", details.getTitle())
-                    .setParameter("imdb_id", details.getImdbId())
-                    .setParameter("runtime", details.getRunTime())
-                    .setParameter("year", details.getYear())
-                    .setParameter("id", id)
+                    .setParameter("title", film.getTitle())
+                    .setParameter("imdb_id", film.getImdbId())
+                    .setParameter("runtime", film.getRunTime())
+                    .setParameter("year", film.getYear())
+                    .setParameter("watched", film.getWatched())
+                    .setParameter("location", film.getLocation())
+                    .setParameter("id", film.getId())
                     .executeUpdate();
         }
 
