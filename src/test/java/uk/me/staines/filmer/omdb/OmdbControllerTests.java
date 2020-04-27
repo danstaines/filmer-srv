@@ -73,8 +73,8 @@ public class OmdbControllerTests {
         log.info("Found: " + film);
         assertEquals("Guardians of the Galaxy Vol. 2", film.getTitle());
         assertEquals(id, film.getImdbId());
-        assertEquals("136 min", film.getRunTime());
-        assertEquals("2017", film.getYear());
+        assertEquals(136, film.getRunTime());
+        assertEquals(2017, film.getYear());
     }
 
     @Test
@@ -90,11 +90,11 @@ public class OmdbControllerTests {
 
         log.info("Searching for {}", searchTerm);
         HttpRequest<String> request = HttpRequest.GET("/search/?query=" + searchTerm);
-        List<FilmDetails> films = client.toBlocking().retrieve(request, Argument.listOf(FilmDetails.class));
+        List<OmdbFilmDetails> films = client.toBlocking().retrieve(request, Argument.listOf(OmdbFilmDetails.class));
         log.info("Found: " + films);
         assertEquals(10, films.size());
         String id = "tt0068646";
-        FilmDetails film = films.stream().filter(f -> f.getImdbId().equals(id)).findFirst().get();
+        OmdbFilmDetails film = films.stream().filter(f -> f.getImdbId().equals(id)).findFirst().get();
         assertEquals("The Godfather", film.getTitle());
         assertEquals(id, film.getImdbId());
         assertEquals("1972", film.getYear());

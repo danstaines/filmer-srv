@@ -35,12 +35,12 @@ public class OmdbClient {
         return flowable.firstElement();
     }
 
-    public Maybe<FilmDetails> find(String id) {
+    public Maybe<OmdbFilmDetails> find(String id) {
         URI uri = UriBuilder.of("/")
                 .queryParam("apikey", apiKey)
                 .queryParam("i", id).build();
         HttpRequest<?> req = HttpRequest.GET(uri);
-        Flowable<FilmDetails> flowable = httpClient.retrieve(req, FilmDetails.class);
+        Flowable<OmdbFilmDetails> flowable = httpClient.retrieve(req, OmdbFilmDetails.class);
         return flowable.firstElement();
     }
 
@@ -50,11 +50,11 @@ public class OmdbClient {
 
     public static void main(String[] args) {
         OmdbClient client = new OmdbClient(new OmdbConfiguration(OmdbConfiguration.OMDB_API_URL, "dff9dc43"));
-        Maybe<FilmDetails> film = client.find("tt3896198");
+        Maybe<OmdbFilmDetails> film = client.find("tt3896198");
         System.out.println(film.blockingGet());
         Maybe<OmdbSearchResult> films = client.search("godfat");
-        for (FilmDetails f : films.blockingGet().search) {
-            System.out.println(f);
+        for (OmdbFilmDetails f : films.blockingGet().search) {
+            System.out.println(f.toFilmDetails());
         }
         client.stop();
     }

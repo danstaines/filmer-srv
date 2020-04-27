@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller("/omdb")
 public class OmdbController {
@@ -24,11 +25,15 @@ public class OmdbController {
 
     @Get("/search")
     public List<FilmDetails> search(@QueryValue("query") String searchStr) {
-        return client.search(searchStr).blockingGet().search;
+        return client.search(searchStr).blockingGet().search.stream().map(OmdbFilmDetails::toFilmDetails).collect(Collectors.toList());
     }
 
     @Get(value = "/find/{id}")
     public FilmDetails find(@NotBlank String id) {
-        return client.find(id).blockingGet();
+        OmdbFilmDetails omdbFilmDetails = client.find(id).blockingGet();
+        if(omdbFilmDetails != null)
+            return omdbFilmDetails.toFilmDetails();
+        else
+            return null;
     }
 }

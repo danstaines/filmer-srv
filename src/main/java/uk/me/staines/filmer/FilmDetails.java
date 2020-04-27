@@ -31,18 +31,18 @@ public class FilmDetails {
     @Column(name = "year")
     @JsonProperty("year")
     @JsonAlias("Year")
-    protected String year;
+    protected int year;
 
     @NotNull
     @Column(name = "runtime")
     @JsonProperty("runtime")
     @JsonAlias("Runtime")
-    protected String runTime;
+    protected int runTime;
 
     public FilmDetails() {
     }
 
-    public FilmDetails(@NotNull String title, @NotNull String imdbId, @NotNull String year, @NotNull String runTime) {
+    public FilmDetails(@NotNull String title, @NotNull String imdbId, @NotNull int year, @NotNull int runTime) {
         this.title = title;
         this.imdbId = imdbId;
         this.year = year;
@@ -69,13 +69,13 @@ public class FilmDetails {
         this.imdbId = imdbId;
     }
 
-    public String getYear() { return year; }
+    public int getYear() { return year; }
 
-    public void setYear(String year) { this.year = year; }
+    public void setYear(int year) { this.year = year; }
 
-    public String getRunTime() { return runTime; }
+    public int getRunTime() { return runTime; }
 
-    public void setRunTime(String runTime) { this.runTime = runTime; }
+    public void setRunTime(int runTime) { this.runTime = runTime; }
 
     @Override
     public String toString() {

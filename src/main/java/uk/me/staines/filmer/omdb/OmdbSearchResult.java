@@ -8,7 +8,7 @@ import java.util.List;
 public class OmdbSearchResult {
 
     @JsonProperty("Search")
-    public List<FilmDetails> search;
+    public List<OmdbFilmDetails> search;
     @JsonProperty("totalResults")
     public int totalResults;
     @JsonProperty("Response")

@@ -11,7 +11,7 @@ public interface FilmRepository {
 
     void deleteById(@NotNull Long id);
 
-    List<FilmDetails> findAll(@NotNull SortingAndOrderArguments args);
+    List<FilmDetails> findAll(@NotNull ListArguments args);
 
     int update(@NotNull Film details);
 

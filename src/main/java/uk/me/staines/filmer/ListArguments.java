@@ -9,7 +9,11 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.Optional;
 
 @Introspected
-public class SortingAndOrderArguments {
+public class ListArguments {
+
+    public enum WatchedFilter {
+        WATCHED,UNWATCHED,ALL;
+    }
 
     @Nullable
     @PositiveOrZero
@@ -20,14 +24,20 @@ public class SortingAndOrderArguments {
     private Integer max;
 
     @Nullable
-    @Pattern(regexp = "id|name")
-    private String sort;
+    @Pattern(regexp = "id|title|runtime|watched|year")
+    private String sort = "id";
 
     @Pattern(regexp = "asc|ASC|desc|DESC")
     @Nullable
-    private String order;
+    private String order = "asc";
 
-    public SortingAndOrderArguments() {
+    @Nullable
+    private WatchedFilter watchedFilter = WatchedFilter.ALL;
+
+    @Nullable
+    private String filter;
+
+    public ListArguments() {
 
     }
 
@@ -61,5 +71,21 @@ public class SortingAndOrderArguments {
 
     public void setOrder(@Nullable String order) {
         this.order = order;
+    }
+
+    public WatchedFilter getWatchedFilter() {
+        return watchedFilter;
+    }
+
+    public void setWatchedFilter(@Nullable WatchedFilter watchedFilter) {
+        this.watchedFilter = watchedFilter;
+    }
+
+    public Optional<String> getFilter() {
+        return Optional.ofNullable(filter);
+    }
+
+    public void setFilter(@Nullable String filter) {
+        this.filter = filter;
     }
 }

@@ -1,6 +1,5 @@
 package uk.me.staines.filmer;
 
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
@@ -41,7 +40,7 @@ public class FilmController {
 
     @Get(value = "/list{?args*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FilmDetails> list(@Valid SortingAndOrderArguments args) {
+    public List<FilmDetails> list(@Valid ListArguments args) {
         return filmRepository.findAll(args);
     }
 
@@ -49,7 +48,7 @@ public class FilmController {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Film> save(@Body @NotBlank String id) {
         log.info("Saving film with IMDB ID {}", id);
-        FilmDetails details = client.find(id).blockingGet();
+        FilmDetails details = client.find(id).blockingGet().toFilmDetails();
         return this.save(details);
     }
 

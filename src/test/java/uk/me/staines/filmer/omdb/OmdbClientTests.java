@@ -54,7 +54,7 @@ public class OmdbClientTests {
         log.info("Calling wiremock on " + url);
         OmdbClient client = new OmdbClient(new OmdbConfiguration(url.toString(), testKey));
         log.info("Searching for {}", id);
-        FilmDetails film = client.find(id).blockingGet();
+        OmdbFilmDetails film = client.find(id).blockingGet();
         log.info("Found: "+film);
         assertEquals("Guardians of the Galaxy Vol. 2", film.getTitle());
         assertEquals(id, film.getImdbId());
@@ -82,7 +82,7 @@ public class OmdbClientTests {
         assertEquals("True", search.response);
         assertEquals(10, search.search.size());
         String id = "tt0068646";
-        FilmDetails film = search.search.stream().filter(f -> f.getImdbId().equals(id)).findFirst().get();
+        OmdbFilmDetails film = search.search.stream().filter(f -> f.getImdbId().equals(id)).findFirst().get();
         assertEquals("The Godfather", film.getTitle());
         assertEquals(id, film.getImdbId());
         assertEquals("1972", film.getYear());

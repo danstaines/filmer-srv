@@ -72,14 +72,14 @@ public class FilmControllerTests {
                         .withHeader("Content-Type", "application/json")
                         .withBody(json)));
         log.info("Adding film ID " + id);
-        HttpRequest<String> request = HttpRequest.POST("/add", id);
+        HttpRequest<String> request = HttpRequest.POST("/add", id).header("Content-Type","text/plain");
         Film film = client.toBlocking().retrieve(request, Film.class);
         log.info("Created film: {}", film);
         assertNotNull(film.getId());
         assertEquals("Guardians of the Galaxy Vol. 2", film.getTitle());
         assertEquals(id, film.getImdbId());
-        assertEquals("136 min", film.getRunTime());
-        assertEquals("2017", film.getYear());
+        assertEquals(136, film.getRunTime());
+        assertEquals(2017, film.getYear());
 
         HttpRequest<String> request2 = HttpRequest.GET("/" + film.getId());
         Film film1 = client.toBlocking().retrieve(request2, Film.class);
@@ -87,8 +87,8 @@ public class FilmControllerTests {
         assertEquals(film, film1);
         assertEquals("Guardians of the Galaxy Vol. 2", film1.getTitle());
         assertEquals(id, film1.getImdbId());
-        assertEquals("136 min", film1.getRunTime());
-        assertEquals("2017", film1.getYear());
+        assertEquals(136, film1.getRunTime());
+        assertEquals(2017, film1.getYear());
 
         HttpRequest<String> request3 = HttpRequest.GET("/list");
         List<Film> films = client.toBlocking().retrieve(request3, Argument.listOf(Film.class));
@@ -97,8 +97,8 @@ public class FilmControllerTests {
         assertEquals(film, film2);
         assertEquals("Guardians of the Galaxy Vol. 2", film2.getTitle());
         assertEquals(id, film2.getImdbId());
-        assertEquals("136 min", film2.getRunTime());
-        assertEquals("2017", film2.getYear());
+        assertEquals(136, film2.getRunTime());
+        assertEquals(2017, film2.getYear());
 
         HttpRequest<String> request4 = HttpRequest.DELETE("/" + film.getId());
         HttpResponse<Object> response = client.toBlocking().exchange(request4);
