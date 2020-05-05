@@ -37,20 +37,20 @@ public class FilmDetails {
     @Column(name = "runtime")
     @JsonProperty("runtime")
     @JsonAlias("Runtime")
-    protected int runTime;
+    protected int runtime;
 
     public FilmDetails() {
     }
 
-    public FilmDetails(@NotNull String title, @NotNull String imdbId, @NotNull int year, @NotNull int runTime) {
+    public FilmDetails(@NotNull String title, @NotNull String imdbId, @NotNull int year, @NotNull int runtime) {
         this.title = title;
         this.imdbId = imdbId;
         this.year = year;
-        this.runTime = runTime;
+        this.runtime = runtime;
     }
 
     public FilmDetails(FilmDetails details) {
-        this(details.getTitle(), details.getImdbId(), details.getYear(), details.runTime);
+        this(details.getTitle(), details.getImdbId(), details.getYear(), details.runtime);
     }
 
     public String getTitle() {
@@ -73,9 +73,9 @@ public class FilmDetails {
 
     public void setYear(int year) { this.year = year; }
 
-    public int getRunTime() { return runTime; }
+    public int getRuntime() { return runtime; }
 
-    public void setRunTime(int runTime) { this.runTime = runTime; }
+    public void setRuntime(int runTime) { this.runtime = runTime; }
 
     @Override
     public String toString() {
@@ -83,7 +83,7 @@ public class FilmDetails {
                 "title='" + title + '\'' +
                 ", imdbId='" + imdbId + '\'' +
                 ", year=" + year +
-                ", runTime=" + runTime +
+                ", runtime=" + runtime +
                 '}';
     }
 

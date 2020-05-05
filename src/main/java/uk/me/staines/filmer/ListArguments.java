@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ListArguments {
 
     public enum WatchedFilter {
-        WATCHED,UNWATCHED,ALL;
+        WATCHED,UNWATCHED,ALL
     }
 
     @Nullable
@@ -24,7 +24,7 @@ public class ListArguments {
     private Integer max;
 
     @Nullable
-    @Pattern(regexp = "id|title|runtime|watched|year")
+    @Pattern(regexp = "id|title|runtime|watched|year|location|favourite")
     private String sort = "id";
 
     @Pattern(regexp = "asc|ASC|desc|DESC")
@@ -33,6 +33,12 @@ public class ListArguments {
 
     @Nullable
     private WatchedFilter watchedFilter = WatchedFilter.ALL;
+
+    @Nullable
+    private Film.Location locationFilter;
+
+    @Nullable
+    Boolean favourite;
 
     @Nullable
     private String filter;
@@ -81,8 +87,24 @@ public class ListArguments {
         this.watchedFilter = watchedFilter;
     }
 
+    public Optional<Film.Location> getLocationFilter() {
+        return Optional.ofNullable(locationFilter);
+    }
+
+    public void setLocationFilter(@Nullable Film.Location locationFilter) {
+        this.locationFilter = locationFilter;
+    }
+
     public Optional<String> getFilter() {
         return Optional.ofNullable(filter);
+    }
+
+    public Optional<Boolean> isFavourite() {
+        return Optional.ofNullable(favourite);
+    }
+
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
     }
 
     public void setFilter(@Nullable String filter) {

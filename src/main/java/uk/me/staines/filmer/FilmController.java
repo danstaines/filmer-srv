@@ -13,6 +13,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller("/films")
 public class FilmController {
@@ -38,10 +39,18 @@ public class FilmController {
                 .orElse(null);
     }
 
+    @Get(value = "/list/csv{?args*}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String listText(@Valid ListArguments args) {
+        return filmRepository.find(args).stream().map(Film::toCsv).collect(Collectors.joining("\n"));
+    }
+
     @Get(value = "/list{?args*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FilmDetails> list(@Valid ListArguments args) {
-        return filmRepository.findAll(args);
+    public FilmList list(@Valid ListArguments args) {
+        List<Film> films = filmRepository.find(args);
+        long count = filmRepository.count(args);
+        return new FilmList(films, count);
     }
 
     @Post(value = "/add", consumes = MediaType.TEXT_PLAIN)

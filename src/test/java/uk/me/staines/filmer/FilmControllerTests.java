@@ -2,10 +2,10 @@ package uk.me.staines.filmer;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableMap;
-import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.annotation.MicronautTest;
@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import uk.me.staines.filmer.omdb.OmdbClientTests;
 
 import javax.inject.Inject;
-
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -72,13 +70,14 @@ public class FilmControllerTests {
                         .withHeader("Content-Type", "application/json")
                         .withBody(json)));
         log.info("Adding film ID " + id);
-        HttpRequest<String> request = HttpRequest.POST("/add", id).header("Content-Type","text/plain");
+        HttpRequest<String> request = HttpRequest.POST("/add", id)
+                .header("Content-Type","text/plain");
         Film film = client.toBlocking().retrieve(request, Film.class);
         log.info("Created film: {}", film);
         assertNotNull(film.getId());
         assertEquals("Guardians of the Galaxy Vol. 2", film.getTitle());
         assertEquals(id, film.getImdbId());
-        assertEquals(136, film.getRunTime());
+        assertEquals(136, film.getRuntime());
         assertEquals(2017, film.getYear());
 
         HttpRequest<String> request2 = HttpRequest.GET("/" + film.getId());
@@ -87,27 +86,27 @@ public class FilmControllerTests {
         assertEquals(film, film1);
         assertEquals("Guardians of the Galaxy Vol. 2", film1.getTitle());
         assertEquals(id, film1.getImdbId());
-        assertEquals(136, film1.getRunTime());
+        assertEquals(136, film1.getRuntime());
         assertEquals(2017, film1.getYear());
 
-        HttpRequest<String> request3 = HttpRequest.GET("/list");
-        List<Film> films = client.toBlocking().retrieve(request3, Argument.listOf(Film.class));
+        HttpRequest<Object> request3 = HttpRequest.GET("/list").accept(MediaType.APPLICATION_JSON_TYPE);
+        FilmList films = client.toBlocking().retrieve(request3,  FilmList.class);
         log.info("Retrieved films: {}", films);
-        Film film2 = films.stream().filter(f -> f.getId().equals(film.getId())).findFirst().get();
+        Film film2 = films.films.stream().filter(f -> f.getId().equals(film.getId())).findFirst().get();
         assertEquals(film, film2);
         assertEquals("Guardians of the Galaxy Vol. 2", film2.getTitle());
         assertEquals(id, film2.getImdbId());
-        assertEquals(136, film2.getRunTime());
+        assertEquals(136, film2.getRuntime());
         assertEquals(2017, film2.getYear());
 
         HttpRequest<String> request4 = HttpRequest.DELETE("/" + film.getId());
         HttpResponse<Object> response = client.toBlocking().exchange(request4);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
 
-        HttpRequest<String> request5 = HttpRequest.GET("/list");
-        List<Film> films2 = client.toBlocking().retrieve(request3, Argument.listOf(Film.class));
+        HttpRequest<Object> request5 = HttpRequest.GET("/list").accept(MediaType.APPLICATION_JSON_TYPE);
+        FilmList films2 = client.toBlocking().retrieve(request3, FilmList.class);
         log.info("Retrieved films: {}", films2);
-        Optional<Film> film3 = films2.stream().filter(f -> f.getId().equals(film.getId())).findFirst();
+        Optional<Film> film3 = films2.films.stream().filter(f -> f.getId().equals(film.getId())).findFirst();
         assertTrue(film3.isEmpty());
 
     }

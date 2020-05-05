@@ -73,7 +73,7 @@ public class OmdbControllerTests {
         log.info("Found: " + film);
         assertEquals("Guardians of the Galaxy Vol. 2", film.getTitle());
         assertEquals(id, film.getImdbId());
-        assertEquals(136, film.getRunTime());
+        assertEquals(136, film.getRuntime());
         assertEquals(2017, film.getYear());
     }
 

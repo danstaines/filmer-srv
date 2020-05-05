@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FilmRepository {
+
     Optional<Film> findById(@NotNull Long id);
 
     Film save(@NotNull FilmDetails details);
 
     void deleteById(@NotNull Long id);
 
-    List<FilmDetails> findAll(@NotNull ListArguments args);
-
+    List<Film> find(@NotNull ListArguments args);
+    long count(@NotNull ListArguments args);
     int update(@NotNull Film details);
 
 }
