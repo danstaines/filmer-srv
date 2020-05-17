@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface FilmRepository {
 
     Optional<Film> findById(@NotNull Long id);
+    Optional<Film> findByImdbId(@NotNull String id);
 
     Film save(@NotNull FilmDetails details);
 

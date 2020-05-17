@@ -35,7 +35,17 @@ public class FilmRepositoryImpl implements FilmRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<Film> findById(@NotNull Long id) {
+
         return Optional.ofNullable(entityManager.find(Film.class, id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Film> findByImdbId(@NotNull String id) {
+        TypedQuery<Film> query = entityManager.createQuery(
+                "SELECT f FROM Film as f where f.imdbId = :imdb_id", Film.class)
+                .setParameter("imdb_id", id);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

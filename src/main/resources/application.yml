@@ -7,6 +7,15 @@ micronaut:
     port: 8086
     cors:
       enabled: true
+  security:
+    enabled: true
+    token:
+      jwt:
+        enabled: true
+        signatures:
+          jwks:
+            okta:
+              url: https://dev-467598.okta.com/oauth2/default/v1/keys
 omdb:
   apiKey: dff9dc43
   urlString: "http://www.omdbapi.com"

@@ -1,6 +1,7 @@
 package uk.me.staines.filmer;
 
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import org.slf4j.Logger;
@@ -10,12 +11,17 @@ import uk.me.staines.filmer.omdb.OmdbClient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
+
 @Controller("/films")
+@Secured(SecurityRule.IS_AUTHENTICATED)
 public class FilmController {
 
     private final Logger log = LoggerFactory.getLogger(FilmController.class);
@@ -28,8 +34,8 @@ public class FilmController {
     }
 
     @Get("/ping")
-    public Map<String,String> ping() {
-        return Map.of("status","ok","timestamp", Instant.now().toString());
+    public Map<String, String> ping(Principal user) {
+        return Map.of("status", "ok", "timestamp", Instant.now().toString(), "user", user.getName());
     }
 
     @Get("/{id}")
@@ -64,11 +70,15 @@ public class FilmController {
     @Put()
     public HttpResponse<Film> save(@Body @Valid FilmDetails details) {
         log.info("Saving film {}", details);
-        Film film = filmRepository.save(details);
-        log.info("Saved film with ID {}", film.getId());
-        return HttpResponse
-                .created(film)
-                .headers(headers -> headers.location(location(film)));
+        if (filmRepository.findByImdbId(details.imdbId).isPresent()) {
+            return HttpResponse.status(HttpStatus.CONFLICT);
+        } else {
+            Film film = filmRepository.save(details);
+            log.info("Saved film with ID {}", film.getId());
+            return HttpResponse
+                    .created(film)
+                    .headers(headers -> headers.location(location(film)));
+        }
     }
 
     @Post()
